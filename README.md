@@ -4,6 +4,10 @@ Open Occupation Blueprint for **ISCO-08 1330**: Information and Communications T
 
 This repository designs a forkable OSS business for an independent IT services manager overseeing a small client's infrastructure: a hardware-support robot performs server-room walkthroughs and inventory checks under a governor-gated actor, so the practice keeps its own change and infrastructure records instead of renting a closed MSP-management SaaS.
 
+The same ISCO occupation now includes an **AI Data Center Operations Manager**
+profile. Its responsibility boundary and mandatory approval operations are in
+[`docs/ai-datacenter-operations.md`](docs/ai-datacenter-operations.md).
+
 ## Robotics premise
 
 All cloud-itonami verticals are designed on the premise that a **robot performs

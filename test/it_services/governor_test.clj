@@ -44,6 +44,17 @@
     (is (:escalate? v))
     (is (not (:hard? v)))))
 
+(deftest escalates-on-ai-datacenter-physical-and-security-actions
+  (let [st (fresh-store)]
+    (doseq [op [:energize-rack :deenergize-rack :dispatch-hardware
+                :change-cooling-setpoint :rotate-tenant-credentials]]
+      (testing (name op)
+        (let [v (governor/check {:client-id "client-1"} {}
+                                {:op op :effect :propose :confidence 0.9}
+                                st)]
+          (is (:escalate? v))
+          (is (not (:hard? v))))))))
+
 (deftest escalates-on-low-confidence
   (let [st (fresh-store)
         proposal {:op :monitor :effect :propose :confidence 0.2 :stake :low}

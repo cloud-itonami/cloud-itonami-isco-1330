@@ -26,7 +26,10 @@
   (:require [it-services.store :as store]))
 
 (def confidence-floor 0.6)
-(def ^:private escalating-ops #{:power-cycle-datacenter :migrate-client-data})
+(def ^:private escalating-ops
+  #{:power-cycle-datacenter :migrate-client-data
+    :energize-rack :deenergize-rack :dispatch-hardware
+    :change-cooling-setpoint :rotate-tenant-credentials})
 
 (defn- hard-violations [{:keys [proposal]} client-record]
   (cond-> []
