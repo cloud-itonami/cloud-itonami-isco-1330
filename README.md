@@ -60,15 +60,15 @@ human-in-the-loop interrupt/resume via checkpointing.
                                            +-> :hold               (:hard? true)
 ```
 
-- `src/it_services/store.cljc` — `Store` protocol + `MemStore`:
+- `src/it_services/store.kotoba` — `Store` protocol + `MemStore`:
   registered clients, committed records, an append-only audit ledger.
-- `src/it_services/advisor.cljc` — `Advisor` protocol; `mock-advisor`
+- `src/it_services/advisor.kotoba` — `Advisor` protocol; `mock-advisor`
   (deterministic, default) proposes an IT operation from a request;
   `llm-advisor` wraps a `langchain.model/ChatModel` — either way the
   advisor only ever produces a `:propose`-effect proposal, never a
   committed record, and LLM parse failures always yield `confidence 0.0`
   (forces escalation, never fabricated confidence).
-- `src/it_services/governor.cljc` — `ITServicesGovernor/check`: a pure
+- `src/it_services/governor.kotoba` — `ITServicesGovernor/check`: a pure
   function, wired as its own `:govern` node. Hard invariants
   (unregistered client, a proposal whose `:effect` isn't `:propose`)
   always route to `:hold`. Escalation invariants
@@ -78,7 +78,7 @@ human-in-the-loop interrupt/resume via checkpointing.
   explicit human approval (`actor/approve!`), matching the README's
   robotics-premise statement that data-center power-cycling and client
   data migrations always require human sign-off.
-- `src/it_services/actor.cljc` — `build-graph`, `run-request!`,
+- `src/it_services/actor.kotoba` — `build-graph`, `run-request!`,
   `approve!`: the `langgraph.graph/state-graph` wiring itself.
 
 ```bash
