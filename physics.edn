@@ -1,0 +1,33 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README "Robotics premise": a hardware-support robot performs server-room
+;; walkthroughs, cable tracing and equipment inventory checks for ICT services
+;; managers (ISCO 1330). Its physical work is racking hardware -- lifting a
+;; server into its rack slot -- and one walkthrough check is whether the
+;; in-row coolers' chilled-water branch can carry the flow the room's heat
+;; load needs.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-1330"
+ :cases
+ [{:id :server-into-rack-slot
+   :kind :manipulator
+   :procedure "arm lifts a rack server from the delivery trolley and slides it onto its rails at the top of the rack (about 1.6 m)"
+   :params {:l1-m 0.80 :l2-m 0.70 :m1-kg 10.0 :m2-kg 7.0
+            :from [0.70 0.30] :to [0.60 1.30] :duration-s 3.0 :steps 450}
+   :sweep {:param :payload-kg :values [8.0 14.0 20.0 26.0 34.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 300.0 :basis "estimate: continuous shoulder torque of a ~20 kg-payload, 1.5 m-reach collaborative arm"}
+   :boundary {:lo 1.0 :hi 80.0}}
+  {:id :chilled-water-branch
+   :kind :pipe-flow
+   :procedure "walkthrough check of the chilled-water branch feeding a row of in-row coolers: 60 m of DN50 steel pipe (~52.5 mm bore); flow swept"
+   :params {:diameter-m 0.0525 :length-m 60.0 :roughness-m 4.5e-5
+            :density-kg-m3 1000.0 :viscosity-pa-s 1.3e-3 :pump-efficiency 0.65}
+   :sweep {:param :q-m3s :values [0.002 0.004 0.006 0.008 0.010]}
+   :quantity :velocity-mps
+   :limit {:max 2.4 :basis "estimate: common chilled-water design ceiling for pipe velocity (noise and erosion) in the 50 mm size range"}
+   :boundary {:lo 0.001 :hi 0.012}}]}
